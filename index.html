@@ -1272,5 +1272,36 @@ var localize = {"ajaxurl":"/saiyou-test/wp-admin/admin-ajax.php","nonce":"7f5c5e
 </script>
 <script id="eael-general-js" src="/saiyou-test/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/js/view/general.min.js?ver=6.8.8"></script>
 <script id="jquery-slick-js" src="/saiyou-test/wp-content/plugins/happy-elementor-addons/assets/vendor/slick/slick.min.js?ver=3.51.0"></script>
+<style id="ls-mates-flow-css">
+/* 一緒に働く仲間たち: 止まらずに流し続けるため、矢印は出さない */
+.elementor-element-ed139d9 .slick-prev,.elementor-element-ed139d9 .slick-next{display:none !important;}
+.elementor-element-ed139d9 .slick-track{transition-timing-function:linear !important;}
+</style>
+<script id="ls-mates-flow">
+(function () {
+  // Happy Addons のカルーセルは slick の「加減速つきで1枚送って止まる」動き。
+  // 初期化を待ってから、等速（linear）・待ち時間 0 に切り替えて、すーっと流れ続けるようにする。
+  var tries = 0;
+  function apply() {
+    var $ = window.jQuery;
+    var el = document.querySelector('.elementor-element-ed139d9 .hajs-slick');
+    if (!$ || !el || !el.classList.contains('slick-initialized')) {
+      if (++tries < 100) setTimeout(apply, 100);
+      return;
+    }
+    var opts = {
+      speed: 3000, autoplay: true, autoplaySpeed: 0, cssEase: 'linear',
+      pauseOnHover: false, pauseOnFocus: false, pauseOnDotsHover: false,
+      arrows: false, swipe: false, draggable: false, touchMove: false
+    };
+    // 画面幅（PC/タブレット/スマホ）が切り替わると slick は元の設定に戻すため、元の設定も書き換える
+    var s = $(el).slick('getSlick');
+    if (s && s.originalSettings) $.extend(s.originalSettings, opts);
+    $(el).slick('slickSetOption', opts, true);
+    $(el).slick('slickPlay');
+  }
+  if (document.readyState === 'complete') apply(); else window.addEventListener('load', apply);
+})();
+</script>
 </body>
 </html> 
